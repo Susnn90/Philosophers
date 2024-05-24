@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/24 14:11:52 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/24 15:58:23 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	main (int argc, char **argv)
 	t_data	table;
 
 	check_input(argc, argv);
-	parse_data(&table, argc, argv);
+	if (parse_data(&table, argc, argv) != 0)
+		error_exit(INIT_ERR_2);
 	data_init(&table);
 	philo_init(&table);
 	// create_thread(argv);

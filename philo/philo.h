@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/24 14:14:18 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/24 16:58:47 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define MAX_INT_ERR "ERROR: NUMBER IS BIGGER THEN INT_MAX"
 //	INIT ERROR
 # define INIT_ERR_1 "ERROR: NOT ENOUGH PHILOSPHERS OR TIME VALUES ARE INCORRECT"
+# define INIT_ERR_2 "ERROR WHILE PARSING INPUT"
 # define MALLOC_ERR "ERROR WHILE ALLOCATING MEMORY"
 //	THREAD ERROR
 # define TH_ERR "ERROR WHILE CREATING THREADS"
@@ -37,11 +38,20 @@
 //	TIME ERROR
 # define TIME_ERR "ERROR: UNABLE TO RETRIVE UTC"
 //	PHILO MSG
-# define TAKE_FORKS "has taken a fork"
-# define THINKING "is thinking"
-# define SLEEPING "is sleeping"
-# define EATING "is eating"
-# define DIED "died"
+// # define TAKE_FORKS "has taken a fork"
+// # define THINKING "is thinking"
+// # define SLEEPING "is sleeping"
+// # define EATING "is eating"
+// # define DIED "died"
+
+typedef enum e_status
+{
+	TAKE_FORKS,
+	EATING,
+	SLEEPING,
+	THINKING,
+	DIED,
+}	t_status;
 
 struct	s_philo;
 struct	s_fork;
@@ -58,21 +68,21 @@ typedef struct s_data
 	long			philo_num;
 	long			meals_nbr;
 	long			dead;
-	long			fninished;
+	long			finished;
 	long			death_time;
 	long			eat_time;
 	long			sleep_time;
 	long			start_time;
 	bool			end_simulation;
 	bool			all_threads_ready;
-	t_fork			*forks;
+	t_fork			*fork;
 	pthread_mutex_t	table_mutex;
 }	t_data;
 
 typedef struct s_philo
 {
+	// t_fork			*forks;
 	t_data			*data;
-	t_fork			*forks;
 	t_fork			*first_fork;
 	t_fork			*second_fork;
 	pthread_t		*tid;
@@ -82,7 +92,7 @@ typedef struct s_philo
 	long			status;
 	long			eating;
 	long			time_to_die;
-	pthread_mutex_t	*mutex;
+	pthread_mutex_t	philo_mutex;
 }	t_philo;
 
 //	MAIN & UTILS
@@ -97,7 +107,7 @@ int		check_argc(int argc);
 int		check_argv(int argc, char **argv);
 
 //	THREADS
-int		create_thread(char **argv);
+int	run_simulation(t_data *table);
 
 //	INIT DATA
 int		parse_data(t_data *table, int argc, char **argv);
