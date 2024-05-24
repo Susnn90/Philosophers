@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/20 17:00:26 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/24 14:14:18 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <errno.h> // error numbers
 # include <limits.h> // INT_MIN_MAX
 # include <pthread.h> // mutex: init, destroy, lock, unlock
-					 // threads: create, join, detach
+					// threads: create, join, detach
 
 //	INPUT ERROR
 # define INPUT_ERR_1 "ERROR: WRONG AMOUNT OF ARGUMENTS"
@@ -43,8 +43,8 @@
 # define EATING "is eating"
 # define DIED "died"
 
-struct s_philo;
-struct s_fork;
+struct	s_philo;
+struct	s_fork;
 
 typedef struct s_fork
 {
@@ -61,7 +61,7 @@ typedef struct s_data
 	long			fninished;
 	long			death_time;
 	long			eat_time;
-	long 			sleep_time;
+	long			sleep_time;
 	long			start_time;
 	bool			end_simulation;
 	bool			all_threads_ready;
@@ -82,13 +82,13 @@ typedef struct s_philo
 	long			status;
 	long			eating;
 	long			time_to_die;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	*mutex;
 }	t_philo;
 
 //	MAIN & UTILS
 int		main(int argc, char **argv);
 void	error_exit(const char *error);
-void	exit_point();
+void	exit_point(void);
 int		ft_atoi(const char *str);
 
 //	CHECK INPUT
@@ -100,10 +100,10 @@ int		check_argv(int argc, char **argv);
 int		create_thread(char **argv);
 
 //	INIT DATA
-int		parse_data(t_data *data, int argc, char **argv);
+int		parse_data(t_data *table, int argc, char **argv);
 void	data_init(t_data *table);
 void	philo_init(t_data *table);
-void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos);
+void	assign_forks(t_data	*table, int philo_pos);
 
 // SAFE FUNCTIONS
 void	*safe_malloc(size_t bytes);
@@ -111,8 +111,11 @@ void	*safe_malloc(size_t bytes);
 // GETTERS & SETTERS
 void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
 bool	get_bool(pthread_mutex_t *mutex, bool *value);
-void	set_long(pthread_mutex_t *mutex,long *dest, long value);
+void	set_long(pthread_mutex_t *mutex, long *dest, long value);
 long	get_long(pthread_mutex_t *mutex, long *value);
 bool	simulation_finished(t_data *table);
+
+// SIMULATION
+void	*dinner_simulation(void *table);
 
 #endif

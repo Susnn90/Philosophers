@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/20 16:41:04 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/24 14:11:52 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	main (int argc, char **argv)
 {
 	t_data	table;
 
-	//check input
 	check_input(argc, argv);
 	parse_data(&table, argc, argv);
 	data_init(&table);
@@ -32,7 +31,7 @@ int	main (int argc, char **argv)
 	return (0);
 }
 
-void	exit_point()
+void	exit_point(void)
 {
 	t_data	table;
 

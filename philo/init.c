@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/20 16:35:43 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/24 15:16:44 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	parse_data(t_data *table, int argc, char **argv)
 {
 	table->philo_num = ft_atoi(argv[1]);
-	table->death_time = ft_atoi(argv[2]) * 1e3;
+	table->death_time = ft_atoi(argv[2]) * 1e3; //needed in microsec -> 1 x 10^3 == 1000
 	table->eat_time = ft_atoi(argv[3]) * 1e3;
 	table->sleep_time = ft_atoi(argv[4]) * 1e3;
 	table->start_time = 0;
@@ -35,7 +35,7 @@ int	parse_data(t_data *table, int argc, char **argv)
 
 void	data_init(t_data *table)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	table->end_simulation = false;
@@ -52,7 +52,7 @@ void	data_init(t_data *table)
 
 void	philo_init(t_data *table)
 {
-	int	i;
+	int		i;
 	t_philo	*philo;
 
 	i = 0;
@@ -62,28 +62,29 @@ void	philo_init(t_data *table)
 		philo->id = i + 1;
 		philo->full = false;
 		philo->meal_count = 0;
-		pthread_mutex_init(&philo->mutex, NULL);
+		philo->mutex = safe_malloc(sizeof(pthread_mutex_t) * table->philo_num);
+		pthread_mutex_init(philo->mutex, NULL);
 		philo->data = table;
-		assign_forks(philo, table->forks, i);
+		assign_forks(table, i);
 		i++;
 	}
 }
 
-void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos)
+void	assign_forks(t_data	*table, int philo_pos)
 {
 	int	philo_nbr;
 
 	//even(left,right) / odd(right,left)
-	philo_nbr = philo->data->philo_num;
-	if (philo->id % 2 == 0)
+	philo_nbr = table->philo_num;
+	if (table->philos->id % 2 == 0)
 	{
-		philo->first_fork = &forks[philo_pos];
-		philo->second_fork = &forks[(philo_pos + 1) % philo_nbr];
+		table->philos->first_fork = &table->forks[philo_pos];
+		table->philos->second_fork = &table->forks[(philo_pos + 1) % philo_nbr];
 	}
 	else
 	{
-		philo->first_fork = &forks[(philo_pos + 1) % philo_nbr];
-		philo->second_fork = &forks[philo_pos];
+		table->philos->first_fork = &table->forks[(philo_pos + 1) % philo_nbr];
+		table->philos->second_fork = &table->forks[philo_pos];
 	}
-	printf("PH %d fork: %d\nPH %d fork: %d\n",philo->id, philo->first_fork->fork_id, philo->id, philo->second_fork->fork_id);
+	printf("PH %ld fork: %ld\nPH %ld fork: %ld\n",table->philos->id, table->philos->first_fork->fork_id, table->philos->id, table->philos->second_fork->fork_id);
 }
