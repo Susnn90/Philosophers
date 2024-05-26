@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/24 16:23:32 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/26 13:37:56 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	parse_data(t_data *table, int argc, char **argv)
 	table->sleep_time = ft_atoi(argv[4]) * 1e3;
 	table->start_time = 0;
 	table->end_simulation = false;
-	table->all_threads_ready = false;
 	if (argc == 6)
 		table->meals_nbr = ft_atoi(argv[5]);
 	else
@@ -29,7 +28,7 @@ int	parse_data(t_data *table, int argc, char **argv)
 	table->finished = 0;
 	if (table->philo_num < 1 || table->death_time < 1
 		|| table->eat_time < 1 || table->sleep_time < 1)
-		error_exit(INIT_ERR_1);
+		error_exit(INIT_ERR_1, &table);
 	return (0);
 }
 
@@ -53,16 +52,18 @@ void	data_init(t_data *table)
 void	philo_init(t_data *table)
 {
 	int		i;
-	// t_philo	*philo;
 
 	i = 0;
 	while (i < table->philo_num)
 	{
+		table->philos[i].data = table;
 		table->philos[i].id = i + 1;
+		table->philos[i].time_to_die = table->death_time;
 		table->philos[i].full = false;
 		table->philos[i].meal_count = 0;
-		pthread_mutex_init(&table->philos[i].mutex, NULL);
-		table->philos[i].data = table;
+		table->philos[i].eating = 0;
+		table->philos[i].status = 0;
+		pthread_mutex_init(&table->philos[i].philo_mutex, NULL);
 		assign_forks(table, i);
 		i++;
 	}
@@ -86,5 +87,5 @@ void	assign_forks(t_data	*table, int philo_pos)
 		philo->first_fork = &table->fork[(philo_pos + 1) % philo_nbr];
 		philo->second_fork = &table->fork[philo_pos];
 	}
-	printf("PH %d fork: %ld\nPH %d fork: %ld\n", philo_pos, philo->first_fork->fork_id, philo_pos, philo->second_fork->fork_id);
+	// printf("PH %d fork: %ld\nPH %d fork: %ld\n", philo_pos, philo->first_fork->fork_id, philo_pos, philo->second_fork->fork_id);
 }
