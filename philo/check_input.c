@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:33:22 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/20 12:07:29 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/26 14:59:36 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	check_input(int argc, char **argv)
 int	check_argc(int argc)
 {
 	if (argc < 5  || argc > 6)
-		error_exit(INPUT_ERR_1);
+		error_exit(INPUT_ERR_1, NULL);
 	return (0);
 }
 int	check_argv(int argc, char **argv)
@@ -42,7 +42,7 @@ int	check_argv(int argc, char **argv)
 				continue;
 			}
 			if (argv[i][j] < '0' || argv[i][j] > '9' || argv[i][j] == '-')
-				error_exit(INPUT_ERR_2);
+				error_exit(INPUT_ERR_2, NULL);
 			j++;
 		}
 		i++;

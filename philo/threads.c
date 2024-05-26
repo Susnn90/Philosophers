@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 13:10:25 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 13:37:37 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/26 17:13:56 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	*monitor(void *data_ptr)
 {
 	t_philo	*philo;
 
-	philo = (t_philo *) data_ptr;
+	philo = (t_philo *)data_ptr;
 	pthread_mutex_lock(&philo->data->write);
 	printf("data val: %ld", philo->data->dead);
 	pthread_mutex_unlock(&philo->data->write);
@@ -82,19 +82,20 @@ int	thread_init(t_data *table)
 	if (table->meals_nbr > 0)
 	{
 		if (pthread_create(&t0, NULL, &monitor, &table->philos[0]))
-			return (error_exit(TH_ERR, &table));
+			return (error_exit(TH_ERR, table));
+		pthread_detach(t0);
 	}
 	while (i++ < table->philo_num)
 	{
 		if (pthread_create(&table->tid[i], NULL, &routine, &table->philos[i]))
-			return (error_exit(TH_ERR, &table));
+			return (error_exit(TH_ERR, table));
 		ft_usleep(1);
 	}
 	i = 0;
 	while (i++ < table->philo_num)
 	{
 		if (pthread_join(table->tid[i], NULL))
-			return (error_exit(JOIN_ERR, &table));
+			return (error_exit(JOIN_ERR, table));
 	}
 	return (0);
 }

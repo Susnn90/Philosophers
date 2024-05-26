@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 13:39:01 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/26 16:36:43 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,16 @@
 # define INIT_ERR_1 "ERROR: NOT ENOUGH PHILOSPHERS OR TIME VALUES ARE INCORRECT"
 # define INIT_ERR_2 "ERROR WHILE PARSING INPUT"
 # define MALLOC_ERR "ERROR WHILE ALLOCATING MEMORY"
+//	ALLOC ERROR
+# define ALLOC_ERR_1 "ERROR WHILE ALLOCATING THREADS IDs"
+# define ALLOC_ERR_3 "ERROR WHILE ALLOCATING PHILOS"
+# define ALLOC_ERR_2 "ERROR WHILE ALLOCATING FORKS"
 //	THREAD ERROR
 # define TH_ERR "ERROR WHILE CREATING THREADS"
 # define JOIN_ERR "ERROR WHILE JOINING THREADS"
 # define DET_ERR "ERROR WHILE DETACHING THREAD"
 # define INIT_ERR_FORK "ERROR WHILE INIT FORKS"
+# define MUTEX_ERR "ERROR WHILE CREATING MUTEX"
 //	TIME ERROR
 # define TIME_ERR "ERROR: UNABLE TO RETRIVE UTC"
 //	PHILO MSG
@@ -45,22 +50,13 @@
 # define EATING "is eating"
 # define DIED "died"
 
-// typedef enum e_status
-// {
-// 	TAKE_FORKS,
-// 	EATING,
-// 	SLEEPING,
-// 	THINKING,
-// 	DIED,
-// }	t_status;
-
 struct	s_philo;
 struct	s_fork;
 
 typedef struct s_fork
 {
 	long			fork_id;
-	pthread_mutex_t	fork;
+	pthread_mutex_t	fork_mutex;
 }	t_fork;
 
 typedef struct s_data
@@ -78,7 +74,6 @@ typedef struct s_data
 	bool			end_simulation;
 	t_fork			*fork;
 	pthread_mutex_t	table_mutex;
-	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
 }	t_data;
 
@@ -101,11 +96,12 @@ typedef struct s_philo
 
 //	MAIN & UTILS
 int		main(int argc, char **argv);
-void	error_exit(const char *error, t_data *table);
+int		error_exit(char *error, t_data *table);
 void	ft_exit(t_data *table);
 void	clear_data(t_data *table);
 int		ft_atoi(const char *str);
 int		ft_usleep(__useconds_t time);
+int		ft_strcmp(char *s1, char *s2);
 
 //	CHECK INPUT
 void	check_input(int argc, char **argv);
@@ -119,29 +115,30 @@ void	*supervisor(void *philo_ptr);
 void	*monitor(void *data_ptr);
 
 //	INIT DATA
-int		parse_data(t_data *table, int argc, char **argv);
-void	data_init(t_data *table);
+int		init(t_data *table, int argc, char **argv);
+int		data_init(t_data *table, int argc, char **argv);
+int		fork_init(t_data *table);
 void	philo_init(t_data *table);
-void	assign_forks(t_data	*table, int philo_pos);
+int		alloc(t_data *table);
+// void	assign_forks(t_data	*table, int philo_pos);
 
 // SAFE FUNCTIONS
 void	*safe_malloc(size_t bytes);
 
-// GETTERS & SETTERS
-void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
-bool	get_bool(pthread_mutex_t *mutex, bool *value);
-void	set_long(pthread_mutex_t *mutex, long *dest, long value);
-long	get_long(pthread_mutex_t *mutex, long *value);
-bool	simulation_finished(t_data *table);
-
-// SIMULATION
-
-int		case_one(t_data *table);
-
+// // GETTERS & SETTERS
+// void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
+// bool	get_bool(pthread_mutex_t *mutex, bool *value);
+// void	set_long(pthread_mutex_t *mutex, long *dest, long value);
+// long	get_long(pthread_mutex_t *mutex, long *value);
+// bool	simulation_finished(t_data *table);
 
 // ACTIONS
 void	messages(char *str, t_philo *philo);
 long	get_time(void);
+void	take_forks(t_philo *philo);
+void	drop_forks(t_philo *philo);
+void	eat(t_philo * philo);
+int		case_one(t_data *table);
 
 
 #endif

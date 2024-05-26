@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 13:38:42 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/26 16:31:56 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,6 @@ int	ft_atoi(const char *str)
 		error_exit(MAX_INT_ERR, NULL);
 	return (result);
 }
-void	error_exit(const char *error, t_data *table)
-{
-	printf("%s\n", error);
-	if (table)
-		ft_exit (table);
-	return (1);
-}
-void	ft_exit(t_data *table)
-{
-	int	i;
-
-	i = 0;
-	while (i++ < table->philo_num)
-	{
-		pthread_mutex_destroy(&table->forks[i]);
-		pthread_mutex_destroy(&table->philos[i].philo_mutex);
-	}
-	pthread_mutex_destroy(&table->write);
-	// pthread_mutex_destroy(&table->lock);
-	clear_data(table);
-}
 
 int	ft_usleep(__useconds_t time)
 {
@@ -66,4 +45,20 @@ int	ft_usleep(__useconds_t time)
 	while ((get_time() - start) < time)
 		usleep(time / 10);
 	return (0);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1 && s2)
+	{
+		if (s1[i] == s2[i])
+		{
+			s1++;
+			s2++;
+		}
+	}
+	return(s1[i] - s2[i]);
 }
