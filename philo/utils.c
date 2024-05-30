@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 16:31:56 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/30 15:18:52 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,11 @@ int	ft_strcmp(char *s1, char *s2)
 	int	i;
 
 	i = 0;
-	while (s1 && s2)
+	while (*s1 & *s2)
 	{
-		if (s1[i] == s2[i])
-		{
-			s1++;
-			s2++;
-		}
+		if (s1[i] != s2[i])
+			return(s1[i] - s2[i]);
+		i++;
 	}
-	return(s1[i] - s2[i]);
+	return(0);
 }

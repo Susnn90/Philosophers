@@ -6,14 +6,13 @@
 #    By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/03 11:21:46 by cwick             #+#    #+#              #
-#    Updated: 2024/05/26 15:37:43 by cwick            ###   ########.fr        #
+#    Updated: 2024/05/30 16:42:34 by cwick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRC = main.c check_input.c threads.c init.c utils.c safe_functions.c \
-	actions.c
+SRC = main.c check_input.c threads.c init.c utils.c	actions.c
 SRC_OBJ = $(SRC:.c=.o)
 
 CC = cc

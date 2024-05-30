@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 13:10:25 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 17:13:56 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/30 18:39:41 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void	*routine(void *philo_ptr)
 {
 	t_philo	*philo;
-	// t_data	*table;
 
 	philo = (t_philo *)philo_ptr;
 	philo->time_to_die = philo->data->death_time + get_time();
@@ -24,7 +23,7 @@ void	*routine(void *philo_ptr)
 		return ((void *)1);
 	while (philo->data->dead == 0)
 	{
-		// eat(philo);
+		eat(philo);
 		messages(THINKING, philo);
 	}
 	if (pthread_join(philo->t1, NULL))
@@ -35,19 +34,28 @@ void	*routine(void *philo_ptr)
 void	*supervisor(void *philo_ptr)
 {
 	t_philo	*philo;
+	t_data	*table;
 
 	philo = (t_philo *) philo_ptr;
-	while (philo->data->dead == 0)
+	table = philo->data;
+	while (table->dead == 0)
 	{
 		pthread_mutex_lock(&philo->philo_mutex);
-		if (get_time() >= philo->time_to_die && philo->eating == 0)
-			messages(DIED, philo);
-		if (philo->meal_count == philo->data->meals_nbr)
+		if (get_time() > philo->time_to_die && philo->eating == 0)
 		{
-			pthread_mutex_lock(&philo->data->table_mutex);
-			philo->data->finished++;
-			philo->meal_count++;
-			pthread_mutex_unlock(&philo->data->table_mutex);
+			pthread_mutex_lock(&table->write);
+			messages(DIED, philo);
+			// error_exit("Simulation ends\n", table);
+			pthread_mutex_unlock(&table->write);
+			table->dead = 1;
+		}
+		if (philo->meal_count >= table->meals_nbr)
+		{
+			pthread_mutex_lock(&table->table_mutex);
+			table->finished++;
+			// philo->meal_count++;
+			pthread_mutex_unlock(&table->table_mutex);
+			break ;
 		}
 		pthread_mutex_unlock(&philo->philo_mutex);
 	}
@@ -56,20 +64,18 @@ void	*supervisor(void *philo_ptr)
 
 void	*monitor(void *data_ptr)
 {
-	t_philo	*philo;
+	t_data	*table;
 
-	philo = (t_philo *)data_ptr;
-	pthread_mutex_lock(&philo->data->write);
-	printf("data val: %ld", philo->data->dead);
-	pthread_mutex_unlock(&philo->data->write);
-	while (philo->data->dead == 0)
+	table = (t_data *)data_ptr;
+	while (table->dead == 0)
 	{
-		pthread_mutex_lock(&philo->philo_mutex);
-		if (philo->data->finished >= philo->data->philo_num)
-			philo->data->dead = 1;
-		pthread_mutex_unlock(&philo->philo_mutex);
+		pthread_mutex_lock(&table->table_mutex);
+		if (table->finished >= table->philo_num)
+				table->dead = 1;
+		pthread_mutex_unlock(&table->table_mutex);
+		ft_usleep(1);
 	}
-	return ((void *)0);
+	return (NULL);
 }
 
 int	thread_init(t_data *table)
@@ -77,22 +83,21 @@ int	thread_init(t_data *table)
 	int			i;
 	pthread_t	t0;
 
-	i = 0;
+	i = -1;
 	table->start_time = get_time();
 	if (table->meals_nbr > 0)
 	{
 		if (pthread_create(&t0, NULL, &monitor, &table->philos[0]))
 			return (error_exit(TH_ERR, table));
-		pthread_detach(t0);
 	}
-	while (i++ < table->philo_num)
+	while (++i < table->philo_num)
 	{
 		if (pthread_create(&table->tid[i], NULL, &routine, &table->philos[i]))
 			return (error_exit(TH_ERR, table));
-		ft_usleep(1);
+		// ft_usleep(1);
 	}
-	i = 0;
-	while (i++ < table->philo_num)
+	i = -1;
+	while (++i < table->philo_num)
 	{
 		if (pthread_join(table->tid[i], NULL))
 			return (error_exit(JOIN_ERR, table));

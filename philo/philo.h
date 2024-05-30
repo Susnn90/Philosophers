@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 16:36:43 by cwick            ###   ########.fr       */
+/*   Updated: 2024/05/30 18:24:55 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@
 # define SLEEPING "is sleeping"
 # define EATING "is eating"
 # define DIED "died"
+# define FINISHED "ate all his meals"
 
 struct	s_philo;
 struct	s_fork;
@@ -71,7 +72,6 @@ typedef struct s_data
 	long			eat_time;
 	long			sleep_time;
 	long			start_time;
-	bool			end_simulation;
 	t_fork			*fork;
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write;
@@ -120,20 +120,9 @@ int		data_init(t_data *table, int argc, char **argv);
 int		fork_init(t_data *table);
 void	philo_init(t_data *table);
 int		alloc(t_data *table);
-// void	assign_forks(t_data	*table, int philo_pos);
-
-// SAFE FUNCTIONS
-void	*safe_malloc(size_t bytes);
-
-// // GETTERS & SETTERS
-// void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
-// bool	get_bool(pthread_mutex_t *mutex, bool *value);
-// void	set_long(pthread_mutex_t *mutex, long *dest, long value);
-// long	get_long(pthread_mutex_t *mutex, long *value);
-// bool	simulation_finished(t_data *table);
 
 // ACTIONS
-void	messages(char *str, t_philo *philo);
+void	messages(char *str, void *philo);
 long	get_time(void);
 void	take_forks(t_philo *philo);
 void	drop_forks(t_philo *philo);
