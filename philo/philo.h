@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/30 18:24:55 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/01 16:16:58 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 //	INPUT ERROR
 # define INPUT_ERR_1 "ERROR: WRONG AMOUNT OF ARGUMENTS"
-# define INPUT_ERR_2 "ERROR: INVALID INPUT CHARACTER"
+# define INPUT_ERR_2 "ERROR: INVALID INPUT CHARACTER OR ZERO PHILOSOPHERS"
 # define MAX_INT_ERR "ERROR: NUMBER IS BIGGER THEN INT_MAX"
 //	INIT ERROR
 # define INIT_ERR_1 "ERROR: NOT ENOUGH PHILOSPHERS OR TIME VALUES ARE INCORRECT"
@@ -56,7 +56,7 @@ struct	s_fork;
 
 typedef struct s_fork
 {
-	long			fork_id;
+	// long			fork_id;
 	pthread_mutex_t	fork_mutex;
 }	t_fork;
 
@@ -85,13 +85,11 @@ typedef struct s_philo
 	t_fork			*second_fork;
 	long			id;
 	long			meal_count;
-	bool			full;
-	long			status;
 	long			eating;
 	long			time_to_die;
 	pthread_mutex_t	philo_mutex;
-	pthread_mutex_t	*first_fork_mutex;
-	pthread_mutex_t	*second_fork_mutex;
+	// pthread_mutex_t	*first_fork_mutex;
+	// pthread_mutex_t	*second_fork_mutex;
 }	t_philo;
 
 //	MAIN & UTILS
@@ -104,7 +102,7 @@ int		ft_usleep(__useconds_t time);
 int		ft_strcmp(char *s1, char *s2);
 
 //	CHECK INPUT
-void	check_input(int argc, char **argv);
+int		check_input(int argc, char **argv);
 int		check_argc(int argc);
 int		check_argv(int argc, char **argv);
 
@@ -118,7 +116,7 @@ void	*monitor(void *data_ptr);
 int		init(t_data *table, int argc, char **argv);
 int		data_init(t_data *table, int argc, char **argv);
 int		fork_init(t_data *table);
-void	philo_init(t_data *table);
+int		philo_init(t_data *table);
 int		alloc(t_data *table);
 
 // ACTIONS
@@ -129,5 +127,13 @@ void	drop_forks(t_philo *philo);
 void	eat(t_philo * philo);
 int		case_one(t_data *table);
 
+# define RST    "\033[0m"      /* Reset to default color */
+# define RED	"\033[1;31m"   /* Bold Red */
+# define G      "\033[1;32m"   /* Bold Green */
+# define Y      "\033[1;33m"   /* Bold Yellow */
+# define B      "\033[1;34m"   /* Bold Blue */
+# define M      "\033[1;35m"   /* Bold Magenta */
+# define C      "\033[1;36m"   /* Bold Cyan */
+# define W      "\033[1;37m"   /* Bold White */
 
 #endif

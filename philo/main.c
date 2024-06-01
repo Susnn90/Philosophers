@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/30 18:58:06 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/01 16:18:30 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	main (int argc, char **argv)
 {
 	t_data	table;
 
-	check_input(argc, argv);
+	if (check_input(argc, argv) == 1)
+		return (1);
 	if (init(&table, argc, argv))
 		error_exit(INIT_ERR_2, NULL);
 	if (table.philo_num == 1)

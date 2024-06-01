@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/30 15:18:52 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/01 13:17:34 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-int	ft_usleep(__useconds_t time)
+int	ft_usleep(__useconds_t time) // microseconds
 {
 	long	start;
 
-	start = get_time();
+	start = get_time(); // milliseconds
 	while ((get_time() - start) < time)
 		usleep(time / 10);
 	return (0);
@@ -49,14 +49,12 @@ int	ft_usleep(__useconds_t time)
 
 int	ft_strcmp(char *s1, char *s2)
 {
-	int	i;
-
-	i = 0;
 	while (*s1 & *s2)
 	{
-		if (s1[i] != s2[i])
-			return(s1[i] - s2[i]);
-		i++;
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		s1++;
+		s2++;
 	}
-	return(0);
+	return (*s1 - *s2);
 }

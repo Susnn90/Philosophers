@@ -6,23 +6,27 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:33:22 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/26 14:59:36 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/01 13:47:16 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 
-void	check_input(int argc, char **argv)
+int	check_input(int argc, char **argv)
 {
-	check_argc(argc);
-	check_argv(argc, argv);
+	if (check_argc(argc) == 1 || check_argv(argc, argv) == 1)
+		return (1);
+	return (0);
 }
 
 int	check_argc(int argc)
 {
 	if (argc < 5  || argc > 6)
-		error_exit(INPUT_ERR_1, NULL);
+	{
+		printf("%s\n", INPUT_ERR_1);
+		return (1);
+	}
 	return (0);
 }
 int	check_argv(int argc, char **argv)
@@ -41,8 +45,11 @@ int	check_argv(int argc, char **argv)
 				j++;
 				continue;
 			}
-			if (argv[i][j] < '0' || argv[i][j] > '9' || argv[i][j] == '-')
-				error_exit(INPUT_ERR_2, NULL);
+			if (argv[1][0] == '0' || argv[i][j] < '0' || argv[i][j] > '9' || argv[i][j] == '-')
+			{
+				printf("%s\n", INPUT_ERR_2);
+				return (1);
+			}
 			j++;
 		}
 		i++;

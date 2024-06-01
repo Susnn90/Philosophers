@@ -6,12 +6,11 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 13:10:25 by cwick             #+#    #+#             */
-/*   Updated: 2024/05/30 18:39:41 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/01 14:51:48 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 void	*routine(void *philo_ptr)
 {
@@ -24,6 +23,9 @@ void	*routine(void *philo_ptr)
 	while (philo->data->dead == 0)
 	{
 		eat(philo);
+		ft_usleep(1);
+		if (philo->data->meals_nbr > 0 && philo->meal_count >= philo->data->meals_nbr)
+			break ;
 		messages(THINKING, philo);
 	}
 	if (pthread_join(philo->t1, NULL))
@@ -45,15 +47,13 @@ void	*supervisor(void *philo_ptr)
 		{
 			pthread_mutex_lock(&table->write);
 			messages(DIED, philo);
-			// error_exit("Simulation ends\n", table);
-			pthread_mutex_unlock(&table->write);
 			table->dead = 1;
+			pthread_mutex_unlock(&table->write);
 		}
-		if (philo->meal_count >= table->meals_nbr)
+		if (table->meals_nbr > 0 && philo->meal_count >= table->meals_nbr)
 		{
 			pthread_mutex_lock(&table->table_mutex);
 			table->finished++;
-			// philo->meal_count++;
 			pthread_mutex_unlock(&table->table_mutex);
 			break ;
 		}
@@ -71,7 +71,7 @@ void	*monitor(void *data_ptr)
 	{
 		pthread_mutex_lock(&table->table_mutex);
 		if (table->finished >= table->philo_num)
-				table->dead = 1;
+			table->dead = 1;
 		pthread_mutex_unlock(&table->table_mutex);
 		ft_usleep(1);
 	}
@@ -94,7 +94,7 @@ int	thread_init(t_data *table)
 	{
 		if (pthread_create(&table->tid[i], NULL, &routine, &table->philos[i]))
 			return (error_exit(TH_ERR, table));
-		// ft_usleep(1);
+		ft_usleep(1);
 	}
 	i = -1;
 	while (++i < table->philo_num)
