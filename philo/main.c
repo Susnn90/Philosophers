@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/01 16:18:30 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 15:49:26 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ void	ft_exit(t_data *table)
 	int	i;
 
 	i = -1;
+	if (!table)
+		return ;
 	while (++i < table->philo_num)
-	{
-		if (table->fork)
-			pthread_mutex_destroy(&table->fork[i].fork_mutex);
-		if (table->philos)
-			pthread_mutex_destroy(&table->philos[i].philo_mutex);
-	}
+		pthread_mutex_destroy(&table->fork[i].fork_mutex);
+	i = -1;
+	while (++i < table->philo_num)
+		pthread_mutex_destroy(&table->philos[i].philo_mutex);
 	pthread_mutex_destroy(&table->write);
 	pthread_mutex_destroy(&table->table_mutex);
 	clear_data(table);
@@ -56,12 +56,12 @@ void	ft_exit(t_data *table)
 
 void	clear_data(t_data *table)
 {
+	if (table->tid)
+		free(table->tid);
 	if (table->philos)
 		free(table->philos);
 	if (table->fork)
 		free(table->fork);
-	if (table->tid)
-		free(table->tid);
 }
 int	case_one(t_data *table)
 {

@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:13:38 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 13:02:25 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 15:26:22 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,20 @@ void	messages(char *str, void *philo)
 	t_philo	*philos;
 
 	philos = (t_philo *)philo;
-	pthread_mutex_lock(&philos->data->write);
-	time = get_time() - philos->data->start_time;
 	if (ft_strcmp(DIED, str) == 0 && philos->data->dead == 0)
 	{
+		time = get_time() - philos->data->start_time;
+		pthread_mutex_lock(&philos->data->write);
 		printf("%s%ld %ld %s%s\n", RED, time, philos->id, str, RST);
+		pthread_mutex_lock(&philos->data->table_mutex);
 		philos->data->dead = 1;
+		pthread_mutex_unlock(&philos->data->write);
+		pthread_mutex_unlock(&philos->data->table_mutex);
 	}
 	if (philos->data->dead == 0)
 		{
+			pthread_mutex_lock(&philos->data->write);
+			time = get_time() - philos->data->start_time;
 			if (ft_strcmp(EATING, str) == 0)
 				printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
 			else if (ft_strcmp(SLEEPING, str) == 0)
@@ -35,8 +40,8 @@ void	messages(char *str, void *philo)
 				printf("%s%ld %ld %s%s\n", Y, time, philos->id, str, RST);
 			else
 				printf("%ld %ld %s\n", time, philos->id, str);
+			pthread_mutex_unlock(&philos->data->write);
 		}
-	pthread_mutex_unlock(&philos->data->write);
 }
 
 /* return milliseconds */

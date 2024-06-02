@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 12:37:40 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 14:47:36 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ typedef struct s_philo
 	long			eating;
 	long			time_to_die;
 	pthread_mutex_t	philo_mutex;
-	// pthread_mutex_t	*first_fork_mutex;
-	// pthread_mutex_t	*second_fork_mutex;
 }	t_philo;
 
 //	MAIN & UTILS

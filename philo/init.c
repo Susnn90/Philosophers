@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 12:37:35 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 15:42:05 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ int	philo_init(t_data *table)
 		table->philos[i].time_to_die = table->death_time;
 		table->philos[i].meal_count = 0;
 		table->philos[i].eating = 0;
-		// table->philos[i].first_fork = &table->fork[i];
-		// table->philos[i].second_fork = &table->fork[(i + 1) % table->philo_num];
 		if (pthread_mutex_init(&table->philos[i].philo_mutex, NULL) != 0)
 			error_exit(MUTEX_ERR, table);
 	}
