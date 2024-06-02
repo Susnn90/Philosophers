@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 13:10:25 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/01 14:51:48 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 13:24:53 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*routine(void *philo_ptr)
 
 	philo = (t_philo *)philo_ptr;
 	philo->time_to_die = philo->data->death_time + get_time();
-	if (pthread_create(&philo->t1, NULL, &supervisor, (void *)philo))
+	if (pthread_create(&philo->t_supervisor, NULL, &supervisor, (void *)philo))
 		return ((void *)1);
 	while (philo->data->dead == 0)
 	{
@@ -28,7 +28,7 @@ void	*routine(void *philo_ptr)
 			break ;
 		messages(THINKING, philo);
 	}
-	if (pthread_join(philo->t1, NULL))
+	if (pthread_join(philo->t_supervisor, NULL) != 0)
 		return ((void *)1);
 	return ((void *)0);
 }
@@ -36,25 +36,20 @@ void	*routine(void *philo_ptr)
 void	*supervisor(void *philo_ptr)
 {
 	t_philo	*philo;
-	t_data	*table;
+	// t_data	*table;
 
 	philo = (t_philo *) philo_ptr;
-	table = philo->data;
-	while (table->dead == 0)
+	while (philo->data->dead == 0)
 	{
 		pthread_mutex_lock(&philo->philo_mutex);
 		if (get_time() > philo->time_to_die && philo->eating == 0)
 		{
-			pthread_mutex_lock(&table->write);
 			messages(DIED, philo);
-			table->dead = 1;
-			pthread_mutex_unlock(&table->write);
+			philo->data->dead = 1;
 		}
-		if (table->meals_nbr > 0 && philo->meal_count >= table->meals_nbr)
+		if (philo->data->meals_nbr > 0 && philo->meal_count >= philo->data->meals_nbr)
 		{
-			pthread_mutex_lock(&table->table_mutex);
-			table->finished++;
-			pthread_mutex_unlock(&table->table_mutex);
+			philo->data->finished++;
 			break ;
 		}
 		pthread_mutex_unlock(&philo->philo_mutex);
@@ -75,32 +70,45 @@ void	*monitor(void *data_ptr)
 		pthread_mutex_unlock(&table->table_mutex);
 		ft_usleep(1);
 	}
-	return (NULL);
+	return ((void *)0);
 }
 
 int	thread_init(t_data *table)
 {
 	int			i;
-	pthread_t	t0;
 
 	i = -1;
 	table->start_time = get_time();
 	if (table->meals_nbr > 0)
 	{
-		if (pthread_create(&t0, NULL, &monitor, &table->philos[0]))
+		if (pthread_create(&table->philos->t_monitor, NULL, &monitor, &table->philos[0]))
 			return (error_exit(TH_ERR, table));
 	}
 	while (++i < table->philo_num)
 	{
-		if (pthread_create(&table->tid[i], NULL, &routine, &table->philos[i]))
+		if (pthread_create(&table->tid[i], NULL, &routine, &table->philos[i]) != 0)
 			return (error_exit(TH_ERR, table));
 		ft_usleep(1);
 	}
+	thread_join(table);
+	return (0);
+}
+int	thread_join(t_data *table)
+{
+	int	i;
+
 	i = -1;
 	while (++i < table->philo_num)
 	{
-		if (pthread_join(table->tid[i], NULL))
+		if (pthread_join(table->tid[i], NULL) != 0)
 			return (error_exit(JOIN_ERR, table));
+		ft_usleep(1);
+	}
+	if (table->meals_nbr > 0)
+	{
+		if (pthread_join(table->philos->t_monitor, NULL) != 0)
+			return (error_exit(JOIN_ERR, table));
+		ft_usleep(1);
 	}
 	return (0);
 }

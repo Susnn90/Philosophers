@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/01 16:16:58 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 12:37:40 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ struct	s_fork;
 
 typedef struct s_fork
 {
-	// long			fork_id;
 	pthread_mutex_t	fork_mutex;
 }	t_fork;
 
@@ -80,7 +79,8 @@ typedef struct s_data
 typedef struct s_philo
 {
 	t_data			*data;
-	pthread_t		t1;
+	pthread_t		t_supervisor;
+	pthread_t		t_monitor;
 	t_fork			*first_fork;
 	t_fork			*second_fork;
 	long			id;
@@ -108,6 +108,7 @@ int		check_argv(int argc, char **argv);
 
 //	THREADS
 int		thread_init(t_data *table);
+int		thread_join(t_data *table);
 void	*routine(void *philo_ptr);
 void	*supervisor(void *philo_ptr);
 void	*monitor(void *data_ptr);

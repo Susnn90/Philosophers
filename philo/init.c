@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/01 16:38:45 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/02 12:37:35 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,30 +56,6 @@ int	data_init(t_data *table, int argc, char **argv)
 	return (0);
 }
 
-int	fork_init(t_data *table)
-{
-	int		i;
-
-	i = -1;
-	while (++i < table->philo_num)
-	{
-		if (pthread_mutex_init(&table->fork[i].fork_mutex, NULL) != 0)
-			error_exit(MUTEX_ERR, table);
-	}
-	table->philos[0].first_fork->fork_mutex = table->fork[0].fork_mutex;
-	table->philos[0].second_fork->fork_mutex = table->fork[table->philo_num - 1].fork_mutex;
-	i = 0;
-	while (++i < table->philo_num)
-	{
-		if (table->philos->id % 2 == 0)
-		{
-			table->philos[i].first_fork->fork_mutex = table->fork[i - 1].fork_mutex;
-			table->philos[i].second_fork->fork_mutex = table->fork[i].fork_mutex;
-		}
-	}
-	return (0);
-}
-
 int	philo_init(t_data *table)
 {
 	int		i;
@@ -92,10 +68,39 @@ int	philo_init(t_data *table)
 		table->philos[i].time_to_die = table->death_time;
 		table->philos[i].meal_count = 0;
 		table->philos[i].eating = 0;
-		table->philos[i].first_fork = &table->fork[i];
-		table->philos[i].second_fork = &table->fork[(i + 1) % table->philo_num];
+		// table->philos[i].first_fork = &table->fork[i];
+		// table->philos[i].second_fork = &table->fork[(i + 1) % table->philo_num];
 		if (pthread_mutex_init(&table->philos[i].philo_mutex, NULL) != 0)
 			error_exit(MUTEX_ERR, table);
+	}
+	return (0);
+}
+
+int	fork_init(t_data *table)
+{
+	int		i;
+
+	i = -1;
+	while (++i < table->philo_num)
+	{
+		if (pthread_mutex_init(&table->fork[i].fork_mutex, NULL) != 0)
+			error_exit(MUTEX_ERR, table);
+	}
+	table->philos[0].first_fork = &table->fork[0];
+	table->philos[0].second_fork = &table->fork[table->philo_num - 1];
+	i = 0;
+	while (++i < table->philo_num)
+	{
+		if (table->philos->id % 2 == 0)
+		{
+			table->philos[i].first_fork = &table->fork[i - 1];
+			table->philos[i].second_fork = &table->fork[i];
+		}
+		else
+		{
+			table->philos[i].first_fork = &table->fork[i];
+			table->philos[i].second_fork = &table->fork[i - 1];
+		}
 	}
 	return (0);
 }
