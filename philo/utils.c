@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 12:58:40 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/15 16:24:34 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,20 @@ int	ft_strcmp(char *s1, char *s2)
 		s2++;
 	}
 	return (0);
+}
+bool	all_threads_ready(t_data *table)
+{
+	static int	i = 0;
+
+	i++;
+	while (table->all_threads_ready != true)
+	{
+		if (i == table->philo_num)
+		{
+			pthread_mutex_lock(&table->table_mutex);
+			table->all_threads_ready = true;
+			pthread_mutex_unlock(&table->table_mutex);
+		}
+	}
+	return (true);
 }

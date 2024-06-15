@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:13:38 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 15:26:22 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/15 20:28:39 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,14 @@ void	messages(char *str, void *philo)
 			pthread_mutex_lock(&philos->data->write);
 			time = get_time() - philos->data->start_time;
 			if (ft_strcmp(EATING, str) == 0)
-				printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
+				printf("%ld %ld %s\n", time, philos->id, str);
+				// printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
 			else if (ft_strcmp(SLEEPING, str) == 0)
-				printf("%s%ld %ld %s%s\n", C, time, philos->id, str, RST);
+				printf("%ld %ld %s\n", time, philos->id, str);
+				// printf("%s%ld %ld %s%s\n", C, time, philos->id, str, RST);
 			else if (ft_strcmp(THINKING, str) == 0)
-				printf("%s%ld %ld %s%s\n", Y, time, philos->id, str, RST);
+				printf("%ld %ld %s\n", time, philos->id, str);
+				// printf("%s%ld %ld %s%s\n", Y, time, philos->id, str, RST);
 			else
 				printf("%ld %ld %s\n", time, philos->id, str);
 			pthread_mutex_unlock(&philos->data->write);
@@ -56,18 +59,26 @@ long	get_time(void)
 
 void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->first_fork->fork_mutex);
-	messages(TAKE_FORKS, (void *)philo);
-	pthread_mutex_lock(&philo->second_fork->fork_mutex);
-	messages(TAKE_FORKS, (void *)philo);
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(&philo->first_fork->fork_mutex);
+		messages(TAKE_FORKS, (void *)philo);
+		pthread_mutex_lock(&philo->second_fork->fork_mutex);
+		messages(TAKE_FORKS, (void *)philo);
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->second_fork->fork_mutex);
+		messages(TAKE_FORKS, (void *)philo);
+		pthread_mutex_lock(&philo->first_fork->fork_mutex);
+		messages(TAKE_FORKS, (void *)philo);
+	}
 }
 
 void	drop_forks(t_philo *philo)
 {
 	pthread_mutex_unlock(&philo->first_fork->fork_mutex);
 	pthread_mutex_unlock(&philo->second_fork->fork_mutex);
-	messages(SLEEPING, (void *)philo);
-	ft_usleep(philo->data->sleep_time);
 }
 
 void	eat(t_philo *philo)
@@ -77,8 +88,8 @@ void	eat(t_philo *philo)
 	philo->eating = 1;
 	philo->time_to_die = get_time() + philo->data->death_time;
 	messages(EATING, (void *)philo);
-	philo->meal_count++;
 	ft_usleep(philo->data->eat_time);
+	philo->meal_count++;
 	philo->eating = 0;
 	pthread_mutex_unlock(&philo->philo_mutex);
 	drop_forks(philo);

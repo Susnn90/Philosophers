@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 15:42:05 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/15 20:35:01 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	data_init(t_data *table, int argc, char **argv)
 	table->start_time = 0;
 	table->dead = 0;
 	table->finished = 0;
+	table->philos_finished_meals = false;
 	if (argc == 6)
 		table->meals_nbr = ft_atoi(argv[5]);
 	else
@@ -52,6 +53,8 @@ int	data_init(t_data *table, int argc, char **argv)
 	if (pthread_mutex_init(&table->write, NULL) != 0)
 		error_exit(MUTEX_ERR, table);
 	if (pthread_mutex_init(&table->table_mutex, NULL) != 0)
+		error_exit(MUTEX_ERR, table);
+	if (pthread_mutex_init(&table->start_mutex, NULL) != 0)
 		error_exit(MUTEX_ERR, table);
 	return (0);
 }

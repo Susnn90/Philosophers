@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/02 14:47:36 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/15 19:30:07 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <unistd.h> // write, usleep
 # include <stdio.h> // printf
 # include <stdlib.h> // malloc, free
-# include <stdbool.h>
+# include <stdbool.h> // boolean values
 # include <sys/time.h> // gettimeofday
 # include <errno.h> // error numbers
 # include <limits.h> // INT_MIN_MAX
@@ -71,9 +71,11 @@ typedef struct s_data
 	long			eat_time;
 	long			sleep_time;
 	long			start_time;
+	bool			philos_finished_meals;
 	t_fork			*fork;
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write;
+	pthread_mutex_t	start_mutex;
 }	t_data;
 
 typedef struct s_philo
@@ -98,6 +100,7 @@ void	clear_data(t_data *table);
 int		ft_atoi(const char *str);
 int		ft_usleep(__useconds_t time);
 int		ft_strcmp(char *s1, char *s2);
+bool	all_threads_ready(t_data *table);
 
 //	CHECK INPUT
 int		check_input(int argc, char **argv);
