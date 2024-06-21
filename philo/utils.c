@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/21 18:46:52 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 19:37:32 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ void	print_action(char *str, t_philo *philos, long time)
 {
 	if (philos->data->dead == 0 && !philos->data->philos_finished_meals)
 	{
-		pthread_mutex_lock(&philos->data->table_mutex);
+		// pthread_mutex_lock(&philos->data->table_mutex);
 		time = get_time() - philos->data->start_time;
-		pthread_mutex_unlock(&philos->data->table_mutex);
+		// pthread_mutex_unlock(&philos->data->table_mutex);
 		pthread_mutex_lock(&philos->data->write);
 		if (ft_strcmp(EATING, str) == 0)
 			printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
