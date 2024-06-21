@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/16 17:31:18 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 18:35:53 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,21 +87,21 @@ int	fork_init(t_data *table)
 		if (pthread_mutex_init(&table->fork[i].fork_mutex, NULL) != 0)
 			error_exit(MUTEX_ERR, table);
 	}
-	table->philos[0].first_fork = &table->fork[0];
-	table->philos[0].second_fork = &table->fork[table->philo_num - 1];
-	i = 0;
+	i = -1;
 	while (++i < table->philo_num)
 	{
+		pthread_mutex_lock(&table->philos->philo_mutex);
 		if (table->philos->id % 2 == 0)
-		{
-			table->philos[i].first_fork = &table->fork[i - 1];
-			table->philos[i].second_fork = &table->fork[i];
-		}
-		else
 		{
 			table->philos[i].first_fork = &table->fork[i];
 			table->philos[i].second_fork = &table->fork[i - 1];
 		}
+		else
+		{
+			table->philos[i].first_fork = &table->fork[i - 1];
+			table->philos[i].second_fork = &table->fork[i];
+		}
+		pthread_mutex_unlock(&table->philos->philo_mutex);
 	}
 	return (0);
 }

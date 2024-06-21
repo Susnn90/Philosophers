@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 13:10:25 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/21 13:46:24 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 18:54:58 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ void	*supervisor(void *philo_ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *) philo_ptr;
-	while (philo->data->dead == 0
-		&& philo->data->philos_finished_meals == false)
+	while (philo->data->dead == 0 && !philo->data->philos_finished_meals)
 	{
 		pthread_mutex_lock(&philo->philo_mutex);
 		if (get_time() > philo->time_to_die && philo->eating == 0)
@@ -47,7 +46,6 @@ void	*supervisor(void *philo_ptr)
 			pthread_mutex_unlock(&philo->data->table_mutex);
 		}
 		pthread_mutex_unlock(&philo->philo_mutex);
-		ft_usleep(1);
 	}
 	return ((void *)0);
 }
@@ -61,6 +59,7 @@ void	*monitor(void *data_ptr)
 	{
 		if (table->finished >= table->philo_num)
 		{
+			printf("%sALL PHILOS FINISHED THERE MEALS.%s\n", M, RST);
 			pthread_mutex_lock(&table->table_mutex);
 			table->philos_finished_meals = true;
 			pthread_mutex_unlock(&table->table_mutex);

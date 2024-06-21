@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 18:09:35 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/21 13:47:24 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 18:42:14 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	routine_loop(t_philo *philo)
 	while (philo->data->dead == 0 && !philo->data->philos_finished_meals)
 	{
 		eat(philo);
+		pthread_mutex_lock(&philo->philo_mutex);
 		if (philo->data->dead == 0 && !philo->data->philos_finished_meals)
 		{
 			messages(SLEEPING, (void *)philo);
@@ -33,6 +34,6 @@ void	routine_loop(t_philo *philo)
 		pthread_mutex_unlock(&philo->data->table_mutex);
 		if (philo->data->dead == 0 && !philo->data->philos_finished_meals)
 			messages(THINKING, philo);
-		ft_usleep(1);
+		pthread_mutex_unlock(&philo->philo_mutex);
 	}
 }
