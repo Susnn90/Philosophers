@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/15 19:30:07 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 13:59:22 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ void	clear_data(t_data *table);
 int		ft_atoi(const char *str);
 int		ft_usleep(__useconds_t time);
 int		ft_strcmp(char *s1, char *s2);
-bool	all_threads_ready(t_data *table);
 
 //	CHECK INPUT
 int		check_input(int argc, char **argv);
@@ -111,6 +110,7 @@ int		check_argv(int argc, char **argv);
 int		thread_init(t_data *table);
 int		thread_join(t_data *table);
 void	*routine(void *philo_ptr);
+void	routine_loop(t_philo *philo);
 void	*supervisor(void *philo_ptr);
 void	*monitor(void *data_ptr);
 
@@ -123,10 +123,11 @@ int		alloc(t_data *table);
 
 // ACTIONS
 void	messages(char *str, void *philo);
+void	print_action(char *str, t_philo *philos, long time);
 long	get_time(void);
 void	take_forks(t_philo *philo);
 void	drop_forks(t_philo *philo);
-void	eat(t_philo * philo);
+void	eat(t_philo *philo);
 int		case_one(t_data *table);
 
 # define RST    "\033[0m"      /* Reset to default color */

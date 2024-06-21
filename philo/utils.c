@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/15 16:24:34 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 13:58:18 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ int	ft_atoi(const char *str)
 	return (result);
 }
 
-int	ft_usleep(__useconds_t time) // microseconds
+int	ft_usleep(__useconds_t time)
 {
 	long	start;
 
-	start = get_time(); // milliseconds
+	start = get_time();
 	while ((get_time() - start) < time)
-		usleep(time / 10);
+		usleep(100);
 	return (0);
 }
 
@@ -58,19 +58,21 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 	return (0);
 }
-bool	all_threads_ready(t_data *table)
-{
-	static int	i = 0;
 
-	i++;
-	while (table->all_threads_ready != true)
+void	print_action(char *str, t_philo *philos, long time)
+{
+	if (philos->data->dead == 0)
 	{
-		if (i == table->philo_num)
-		{
-			pthread_mutex_lock(&table->table_mutex);
-			table->all_threads_ready = true;
-			pthread_mutex_unlock(&table->table_mutex);
-		}
+		pthread_mutex_lock(&philos->data->write);
+		time = get_time() - philos->data->start_time;
+		if (ft_strcmp(EATING, str) == 0)
+			printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
+		else if (ft_strcmp(SLEEPING, str) == 0)
+			printf("%s%ld %ld %s%s\n", C, time, philos->id, str, RST);
+		else if (ft_strcmp(THINKING, str) == 0)
+			printf("%s%ld %ld %s%s\n", Y, time, philos->id, str, RST);
+		else
+			printf("%ld %ld %s\n", time, philos->id, str);
+		pthread_mutex_unlock(&philos->data->write);
 	}
-	return (true);
 }

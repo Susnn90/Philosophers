@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:13:38 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/15 20:28:39 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 13:57:08 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,7 @@ void	messages(char *str, void *philo)
 		pthread_mutex_unlock(&philos->data->write);
 		pthread_mutex_unlock(&philos->data->table_mutex);
 	}
-	if (philos->data->dead == 0)
-		{
-			pthread_mutex_lock(&philos->data->write);
-			time = get_time() - philos->data->start_time;
-			if (ft_strcmp(EATING, str) == 0)
-				printf("%ld %ld %s\n", time, philos->id, str);
-				// printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
-			else if (ft_strcmp(SLEEPING, str) == 0)
-				printf("%ld %ld %s\n", time, philos->id, str);
-				// printf("%s%ld %ld %s%s\n", C, time, philos->id, str, RST);
-			else if (ft_strcmp(THINKING, str) == 0)
-				printf("%ld %ld %s\n", time, philos->id, str);
-				// printf("%s%ld %ld %s%s\n", Y, time, philos->id, str, RST);
-			else
-				printf("%ld %ld %s\n", time, philos->id, str);
-			pthread_mutex_unlock(&philos->data->write);
-		}
+	print_action(str, philos, time);
 }
 
 /* return milliseconds */

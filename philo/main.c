@@ -6,14 +6,13 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/15 19:40:49 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/21 13:42:18 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-int	main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_data	table;
 
@@ -63,6 +62,7 @@ void	clear_data(t_data *table)
 	if (table->fork)
 		free(table->fork);
 }
+
 int	case_one(t_data *table)
 {
 	table->start_time = get_time();
