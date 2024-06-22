@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/22 17:24:17 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/22 17:31:16 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	ft_strcmp(char *s1, char *s2)
 
 void	print_action(char *str, t_philo *philos, long time)
 {
-	// pthread_mutex_lock(&philos->data->table_mutex);
 	if (philos->data->dead == 0 && !philos->data->philos_finished_meals)
 	{
 		pthread_mutex_lock(&philos->data->table_mutex);
@@ -78,5 +77,4 @@ void	print_action(char *str, t_philo *philos, long time)
 			printf("%ld %ld %s\n", time, philos->id, str);
 		pthread_mutex_unlock(&philos->data->write);
 	}
-	// pthread_mutex_unlock(&philos->data->table_mutex);
 }
