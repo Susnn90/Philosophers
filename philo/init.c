@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/21 18:35:53 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/22 14:49:27 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,22 +87,16 @@ int	fork_init(t_data *table)
 		if (pthread_mutex_init(&table->fork[i].fork_mutex, NULL) != 0)
 			error_exit(MUTEX_ERR, table);
 	}
-	i = -1;
+	i = 0;
+	pthread_mutex_lock(&table->philos->philo_mutex);
+	table->philos[0].first_fork = &table->fork[i];
+	table->philos[0].second_fork = &table->fork[table->philo_num - 1];
 	while (++i < table->philo_num)
 	{
-		pthread_mutex_lock(&table->philos->philo_mutex);
-		if (table->philos->id % 2 == 0)
-		{
-			table->philos[i].first_fork = &table->fork[i];
-			table->philos[i].second_fork = &table->fork[i - 1];
-		}
-		else
-		{
-			table->philos[i].first_fork = &table->fork[i - 1];
-			table->philos[i].second_fork = &table->fork[i];
-		}
-		pthread_mutex_unlock(&table->philos->philo_mutex);
+		table->philos[i].first_fork = &table->fork[i - 1];
+		table->philos[i].second_fork = &table->fork[i];
 	}
+	pthread_mutex_unlock(&table->philos->philo_mutex);
 	return (0);
 }
 
@@ -118,3 +112,17 @@ int	init(t_data *table, int argc, char **argv)
 		return (1);
 	return (0);
 }
+
+
+		// // pthread_mutex_lock(&table->philos->philo_mutex);
+		// if (table->philos[i].id % 2 == 0)
+		// {
+		// 	table->philos[i].first_fork = &table->fork[i  - 1];
+		// 	table->philos[i].second_fork = &table->fork[i];
+		// }
+		// else
+		// {
+		// 	table->philos[i].first_fork = &table->fork[i];
+		// 	table->philos[i].second_fork = &table->fork[i - 1];
+		// }
+		// // pthread_mutex_unlock(&table->philos->philo_mutex);

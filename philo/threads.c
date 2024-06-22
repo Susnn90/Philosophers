@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 13:10:25 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/21 18:54:58 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/22 15:12:58 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,11 @@ void	*monitor(void *data_ptr)
 	{
 		if (table->finished >= table->philo_num)
 		{
-			printf("%sALL PHILOS FINISHED THERE MEALS.%s\n", M, RST);
 			pthread_mutex_lock(&table->table_mutex);
 			table->philos_finished_meals = true;
 			pthread_mutex_unlock(&table->table_mutex);
+			printf("%sALL PHILOS FINISHED THERE MEALS.%s\n", M, RST);
 		}
-		ft_usleep(1);
 	}
 	return ((void *)0);
 }
@@ -75,7 +74,7 @@ int	thread_init(t_data *table)
 
 	i = -1;
 	table->start_time = get_time();
-	if (table->meals_nbr > 0)
+	if (table->meals_nbr >= 0)
 	{
 		if (pthread_create(&table->philos->t_monitor,
 				NULL, &monitor, table) != 0)
@@ -102,13 +101,13 @@ int	thread_join(t_data *table)
 	{
 		if (pthread_join(table->tid[i], NULL) != 0)
 			return (error_exit(JOIN_ERR, table));
-		ft_usleep(100);
+		ft_usleep(1);
 	}
 	if (table->meals_nbr > 0)
 	{
 		if (pthread_join(table->philos->t_monitor, NULL) != 0)
 			return (error_exit(JOIN_ERR, table));
-		ft_usleep(100);
+		ft_usleep(1);
 	}
 	return (0);
 }
