@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:13:38 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/22 17:24:03 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/29 11:32:26 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	messages(char *str, void *philo)
 	
 	time = 0;
 	philos = (t_philo *)philo;
-	pthread_mutex_lock(&philos->philo_mutex);
+	// pthread_mutex_lock(&philos->philo_mutex);
 	if (ft_strcmp(DIED, str) == 0 && philos->data->dead == 0)
 	{	
 		
@@ -31,7 +31,7 @@ void	messages(char *str, void *philo)
 		philos->data->dead = 1;
 		pthread_mutex_unlock(&philos->data->table_mutex);
 	}
-	pthread_mutex_unlock(&philos->philo_mutex);
+	// pthread_mutex_unlock(&philos->philo_mutex);
 	print_action(str, philos, time);
 }
 

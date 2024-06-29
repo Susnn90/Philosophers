@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/22 17:24:13 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/29 12:40:47 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,6 @@ int	case_one(t_data *table)
 		error_exit(DET_ERR, table);
 	while (table->dead == 0)
 		ft_usleep(1);
-	// if (pthread_join(table->tid[0], NULL) != 0)
-	// 	return (error_exit(JOIN_ERR, table));
 	ft_exit(table);
 	return (0);
 }

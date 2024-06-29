@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/22 17:24:15 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/29 11:39:40 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,11 @@ typedef struct s_data
 	long			philo_num;
 	long			meals_nbr;
 	long			dead;
-	long			finished;
 	long			death_time;
 	long			eat_time;
 	long			sleep_time;
 	long			start_time;
+	long			finish_count;
 	bool			philos_finished_meals;
 	t_fork			*fork;
 	pthread_mutex_t	table_mutex;
@@ -89,6 +89,7 @@ typedef struct s_philo
 	long			meal_count;
 	long			eating;
 	long			time_to_die;
+	bool			finished;
 	pthread_mutex_t	philo_mutex;
 }	t_philo;
 
