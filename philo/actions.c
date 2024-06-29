@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:13:38 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/29 11:32:26 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/29 16:55:41 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,19 @@ void	messages(char *str, void *philo)
 {
 	long	time;
 	t_philo	*philos;
-	
+
 	time = 0;
 	philos = (t_philo *)philo;
-	// pthread_mutex_lock(&philos->philo_mutex);
+	pthread_mutex_lock(&philos->data->table_mutex);
 	if (ft_strcmp(DIED, str) == 0 && philos->data->dead == 0)
-	{	
-		
-		pthread_mutex_lock(&philos->data->table_mutex);
+	{
 		time = get_time() - philos->data->start_time;
 		pthread_mutex_lock(&philos->data->write);
 		printf("%s%ld %ld %s%s\n", RED, time, philos->id, str, RST);
 		pthread_mutex_unlock(&philos->data->write);
 		philos->data->dead = 1;
-		pthread_mutex_unlock(&philos->data->table_mutex);
 	}
-	// pthread_mutex_unlock(&philos->philo_mutex);
+	pthread_mutex_unlock(&philos->data->table_mutex);
 	print_action(str, philos, time);
 }
 
@@ -46,8 +43,7 @@ long	get_time(void)
 }
 
 void	take_forks(t_philo *philo)
-{	
-	// pthread_mutex_lock(&philo->philo_mutex);
+{
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&philo->first_fork->fork_mutex);
@@ -62,13 +58,20 @@ void	take_forks(t_philo *philo)
 		pthread_mutex_lock(&philo->first_fork->fork_mutex);
 		messages(TAKE_FORKS, (void *)philo);
 	}
-	// pthread_mutex_unlock(&philo->philo_mutex);
 }
 
 void	drop_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(&philo->first_fork->fork_mutex);
-	pthread_mutex_unlock(&philo->second_fork->fork_mutex);
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_unlock(&philo->first_fork->fork_mutex);
+		pthread_mutex_unlock(&philo->second_fork->fork_mutex);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->second_fork->fork_mutex);
+		pthread_mutex_unlock(&philo->first_fork->fork_mutex);
+	}
 }
 
 void	eat(t_philo *philo)
@@ -82,10 +85,10 @@ void	eat(t_philo *philo)
 		pthread_mutex_unlock(&philo->philo_mutex);
 		messages(EATING, (void *)philo);
 		ft_usleep(philo->data->eat_time);
+		drop_forks(philo);
 		pthread_mutex_lock(&philo->philo_mutex);
 		philo->meal_count++;
 		philo->eating = 0;
 		pthread_mutex_unlock(&philo->philo_mutex);
-		drop_forks(philo);
 	}
 }

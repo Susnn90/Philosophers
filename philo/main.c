@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/29 12:40:47 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/29 15:44:16 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,32 +49,33 @@ void	ft_exit(t_data *table)
 	while (++i < table->philo_num)
 		pthread_mutex_destroy(&table->philos[i].philo_mutex);
 	pthread_mutex_destroy(&table->write);
-	pthread_mutex_destroy(&table->table_mutex);
 	pthread_mutex_destroy(&table->start_mutex);
+	pthread_mutex_destroy(&table->table_mutex);
 	clear_data(table);
 }
 
 void	clear_data(t_data *table)
 {
-	if (table->tid)
-		free(table->tid);
-	if (table->philos)
-		free(table->philos);
-	if (table->fork)
-		free(table->fork);
+	if (table)
+	{
+		if (table->tid)
+			free(table->tid);
+		if (table->philos)
+			free(table->philos);
+		if (table->fork)
+			free(table->fork);
+	}
 }
 
 int	case_one(t_data *table)
 {
-	pthread_mutex_lock(&table->table_mutex);
 	table->start_time = get_time();
-	pthread_mutex_unlock(&table->table_mutex);
 	if (pthread_create(&table->tid[0], NULL, &routine, &table->philos[0]))
 		return (error_exit(TH_ERR, table));
 	if (pthread_detach(table->tid[0]) != 0)
 		error_exit(DET_ERR, table);
 	while (table->dead == 0)
-		ft_usleep(1);
+		ft_usleep(10);
 	ft_exit(table);
 	return (0);
 }

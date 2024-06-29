@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/29 11:39:14 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/29 14:57:59 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,17 +113,3 @@ int	init(t_data *table, int argc, char **argv)
 		return (1);
 	return (0);
 }
-
-
-		// // pthread_mutex_lock(&table->philos->philo_mutex);
-		// if (table->philos[i].id % 2 == 0)
-		// {
-		// 	table->philos[i].first_fork = &table->fork[i  - 1];
-		// 	table->philos[i].second_fork = &table->fork[i];
-		// }
-		// else
-		// {
-		// 	table->philos[i].first_fork = &table->fork[i];
-		// 	table->philos[i].second_fork = &table->fork[i - 1];
-		// }
-		// // pthread_mutex_unlock(&table->philos->philo_mutex);

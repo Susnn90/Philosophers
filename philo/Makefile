@@ -6,7 +6,7 @@
 #    By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/03 11:21:46 by cwick             #+#    #+#              #
-#    Updated: 2024/06/29 11:55:45 by cwick            ###   ########.fr        #
+#    Updated: 2024/06/29 16:51:27 by cwick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRC_OBJ = $(SRC:.c=.o)
 
 CC = cc
 DIR = ./philo/
-CFLAGS = -Wall -Wextra -Werror -pthread -g #-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -pthread -g3 #-fsanitize=thread
 
 all: $(NAME) clean
 
