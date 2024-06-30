@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:49 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/30 14:05:49 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/30 16:30:02 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	main(int argc, char **argv)
 		return (1);
 	if (init(&table, argc, argv))
 		error_exit(INIT_ERR_2, NULL);
-	if (table.philo_num == 1)
-		return (case_one(&table));
+	// if (table.philo_num == 1)
+	// 	return (case_one(&table));
 	if (thread_init(&table))
 		return (1);
 	ft_exit(&table);
@@ -72,10 +72,10 @@ int	case_one(t_data *table)
 	table->start_time = get_time();
 	if (pthread_create(&table->tid[0], NULL, &routine, &table->philos[0]))
 		return (error_exit(TH_ERR, table));
-	if (pthread_detach(table->tid[0]) != 0)
-		error_exit(DET_ERR, table);
 	while (table->dead == 0)
 		ft_usleep(10);
+	if (pthread_join(table->tid[0], NULL) != 0)
+		return (error_exit(JOIN_ERR, table));
 	ft_exit(table);
 	return (0);
 }
