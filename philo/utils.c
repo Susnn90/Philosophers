@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/18 12:46:01 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/29 17:00:02 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/30 14:21:37 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ void	print_action(char *str, t_philo *philos, long time)
 	{
 		pthread_mutex_lock(&philos->data->write);
 		time = get_time() - philos->data->start_time;
-		if (ft_strcmp(EATING, str) == 0)
-			printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
-		else if (ft_strcmp(SLEEPING, str) == 0)
-			printf("%s%ld %ld %s%s\n", C, time, philos->id, str, RST);
-		else
-			printf("%ld %ld %s\n", time, philos->id, str);
+		// if (ft_strcmp(EATING, str) == 0)
+		// 	printf("%s%ld %ld %s%s\n", G, time, philos->id, str, RST);
+		// else if (ft_strcmp(SLEEPING, str) == 0)
+		// 	printf("%s%ld %ld %s%s\n", C, time, philos->id, str, RST);
+		// else
+		printf("%ld %ld %s\n", time, philos->id, str);
 		pthread_mutex_unlock(&philos->data->write);
 	}
 	// pthread_mutex_unlock(&philos->data->table_mutex);

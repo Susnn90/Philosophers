@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/29 14:57:59 by cwick            ###   ########.fr       */
+/*   Updated: 2024/06/30 14:10:38 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,9 @@ int	data_init(t_data *table, int argc, char **argv)
 	table->dead = 0;
 	table->finish_count = 0;
 	table->philos_finished_meals = false;
+	table->tid = NULL;
+	table->philos = NULL;
+	table->fork = NULL;
 	if (argc == 6)
 		table->meals_nbr = ft_atoi(argv[5]);
 	else
