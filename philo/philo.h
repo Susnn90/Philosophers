@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 11:18:20 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/29 14:15:36 by cwick            ###   ########.fr       */
+/*   Updated: 2024/07/05 14:38:39 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_data
 	pthread_mutex_t	table_mutex;
 	pthread_mutex_t	write;
 	pthread_mutex_t	start_mutex;
+	pthread_mutex_t	monitor_mutex;
 }	t_data;
 
 typedef struct s_philo
@@ -114,6 +115,7 @@ void	*routine(void *philo_ptr);
 void	routine_loop(t_philo *philo);
 void	*supervisor(void *philo_ptr);
 void	*monitor(void *data_ptr);
+void	destroy_mutex(t_data *table);
 
 //	INIT DATA
 int		init(t_data *table, int argc, char **argv);
@@ -124,7 +126,6 @@ int		alloc(t_data *table);
 
 // ACTIONS
 void	messages(char *str, void *philo);
-void	print_action(char *str, t_philo *philos, long time);
 long	get_time(void);
 void	take_forks(t_philo *philo);
 void	drop_forks(t_philo *philo);

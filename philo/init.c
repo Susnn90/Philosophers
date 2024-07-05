@@ -6,7 +6,7 @@
 /*   By: cwick <cwick@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 18:26:43 by cwick             #+#    #+#             */
-/*   Updated: 2024/06/30 14:10:38 by cwick            ###   ########.fr       */
+/*   Updated: 2024/07/05 11:52:52 by cwick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 int	alloc(t_data *table)
 {
-	table->philos = malloc(sizeof(t_philo) * table->philo_num);
-	if (!table->philos)
-		return (error_exit(ALLOC_ERR_3, table));
+	table->tid = malloc(sizeof(pthread_t) * table->philo_num);
+	if (!table->tid)
+		return (error_exit(ALLOC_ERR_1, table));
 	table->fork = malloc(sizeof(t_fork) * table->philo_num);
 	if (!table->fork)
 	{
-		free (table->philos);
+		free (table->tid);
 		return (error_exit(ALLOC_ERR_2, table));
 	}
-	table->tid = malloc(sizeof(pthread_t) * table->philo_num);
-	if (!table->tid)
+	table->philos = malloc(sizeof(t_philo) * table->philo_num);
+	if (!table->philos)
 	{
-		free(table->philos);
+		free(table->tid);
 		free(table->fork);
-		return (error_exit(ALLOC_ERR_1, table));
+		return (error_exit(ALLOC_ERR_3, table));
 	}
 	return (0);
 }
